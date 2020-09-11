@@ -66,7 +66,8 @@ const action: Action = async(github, context, core) => {
     try {
       info = YAML.safeLoad(infoRaw || '')
     }
-    catch {
+    catch (e) {
+      core.info(`YAML parse failed with:${e.message}`)
       info = null
     }
 
@@ -75,6 +76,11 @@ const action: Action = async(github, context, core) => {
 
     // invalid issue
     if (!question || !template || !tests || !info) {
+      core.info(`question: ${JSON.stringify(question)}`)
+      core.info(`template: ${JSON.stringify(template)}`)
+      core.info(`tests: ${JSON.stringify(tests)}`)
+      core.info(`info: ${JSON.stringify(info)}`)
+
       await updateComment(
         github,
         context,
